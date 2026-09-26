@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ organization.name }} · Task Manager{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="eyebrow">Organization</p>
+        <h1>{{ organization.name }}</h1>
+        <p>Projects, members, and current work in one place.</p>
+    </div>
+    <div class="header-actions">
+        <a class="button button-secondary" href="{% url 'tasks:list' organization.slug %}">View tasks</a>
+        {% if membership.role == "OWNER" or membership.role == "ADMIN" %}
+            <a class="button button-primary" href="{% url 'projects:create' organization.slug %}">New project</a>
+        {% endif %}
+    </div>
+</div>
+<div class="dashboard-grid">
+    <section class="panel">
+        <div class="section-header">
+            <div>
+                <p class="eyebrow">Recent</p>
+                <h2>Projects</h2>
+            </div>
+            <a href="{% url 'projects:list' organization.slug %}">View all</a>
+        </div>
+        <div class="stack-list">
+            {% for project in projects %}
+                <a class="list-row" href="{% url 'projects:detail' organization.slug project.slug %}">
+                    <span>
+                        <strong>{{ project.name }}</strong>
+                        <small>{{ project.description|truncatewords:12|default:"No description" }}</small>
+                    </span>
+                    <span class="badge badge-{{ project.status|lower }}">{{ project.get_status_display }}</span>
+                </a>
+            {% empty %}
+                <div class="empty-inline">No projects have been created.</div>
+            {% endfor %}
+        </div>
+    </section>
+    <section class="panel">
+        <div class="section-header">
+            <div>
+                <p class="eyebrow">Team</p>
+                <h2>Members</h2>
+            </div>
+            {% if membership.role == "OWNER" or membership.role == "ADMIN" %}
+                <a href="{% url 'organizations:user-create' organization.slug %}">Add user</a>
+            {% endif %}
+        </div>
+        <div class="stack-list">
+            {% for item in memberships %}
+                <div class="list-row">
+                    <span>
+                        <strong>{{ item.user.name }}</strong>
+                        <small>{{ item.user.email }}</small>
+                    </span>
+                    <span class="badge badge-neutral">{{ item.get_role_display }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

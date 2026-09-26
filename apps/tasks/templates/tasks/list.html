@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Tasks · {{ organization.name }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="eyebrow">{{ organization.name }}</p>
+        <h1>Tasks</h1>
+        <p>Search, filter, and sort work across every project.</p>
+    </div>
+</div>
+<section class="panel">
+    <form
+        class="filter-bar"
+        method="get"
+        hx-get="{% url 'tasks:list' organization.slug %}"
+        hx-target="#task-list"
+        hx-push-url="true"
+        hx-trigger="change, submit, keyup changed delay:400ms from:#id_q"
+    >
+        <div class="filter-search">{{ filter_form.q }}</div>
+        {{ filter_form.status }}
+        {{ filter_form.priority }}
+        {{ filter_form.project }}
+        {{ filter_form.assignee }}
+        {{ filter_form.ordering }}
+        <button class="button button-secondary" type="submit">Apply</button>
+    </form>
+    {% include "tasks/_task_list.html" %}
+</section>
+{% endblock %}

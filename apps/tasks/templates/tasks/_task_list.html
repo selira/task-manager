@@ -1,0 +1,39 @@
+<div id="task-list">
+    {% if tasks %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Project</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Assignee</th>
+                        <th>Due</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                        <tr>
+                            <td>
+                                <a class="table-title" href="{% url 'tasks:detail' organization.slug task.project.slug task.pk %}">
+                                    {{ task.title }}
+                                </a>
+                            </td>
+                            <td>{{ task.project.name }}</td>
+                            <td><span class="badge badge-{{ task.status|lower }}">{{ task.get_status_display }}</span></td>
+                            <td><span class="badge priority-{{ task.priority|lower }}">{{ task.get_priority_display }}</span></td>
+                            <td>{{ task.assignee|default:"Unassigned" }}</td>
+                            <td>{{ task.due_date|date:"M j, Y"|default:"—" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-inline">
+            <strong>No tasks found</strong>
+            <span>Try changing the filters or create the first task.</span>
+        </div>
+    {% endif %}
+</div>

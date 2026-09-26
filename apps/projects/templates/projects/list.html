@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Projects · {{ organization.name }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="eyebrow">{{ organization.name }}</p>
+        <h1>Projects</h1>
+        <p>All projects available to your organization.</p>
+    </div>
+    {% if membership.role == "OWNER" or membership.role == "ADMIN" %}
+        <a class="button button-primary" href="{% url 'projects:create' organization.slug %}">New project</a>
+    {% endif %}
+</div>
+<div class="card-grid">
+    {% for project in projects %}
+        <a class="card card-link" href="{% url 'projects:detail' organization.slug project.slug %}">
+            <div class="card-heading">
+                <h2>{{ project.name }}</h2>
+                <span class="badge badge-{{ project.status|lower }}">{{ project.get_status_display }}</span>
+            </div>
+            <p>{{ project.description|truncatewords:22|default:"No description provided." }}</p>
+            <span class="link-label">View project →</span>
+        </a>
+    {% empty %}
+        <div class="empty-state panel">
+            <h2>No projects yet</h2>
+            <p>Create a project to start organizing work.</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

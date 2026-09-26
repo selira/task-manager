@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} · Task Manager{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="eyebrow">Organization</p>
+        <h1>{{ page_title }}</h1>
+        <p>You will become the first owner of this organization.</p>
+    </div>
+</div>
+<div class="panel form-panel">
+    <form method="post" class="form-stack">
+        {% csrf_token %}
+        {% include "includes/form_fields.html" %}
+        <div class="form-actions">
+            <button class="button button-primary" type="submit">Create organization</button>
+            <a class="button button-secondary" href="{% url 'organizations:list' %}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

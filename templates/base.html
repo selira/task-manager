@@ -1,0 +1,64 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Task Manager{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+    <script src="{% static 'js/app.js' %}" defer></script>
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="{% url 'organizations:list' %}">Task Manager</a>
+        {% if user.is_authenticated %}
+            <div class="account">
+                <span>{{ user.name|default:user.email }}</span>
+                <form method="post" action="{% url 'users:logout' %}">
+                    {% csrf_token %}
+                    <button class="button button-quiet" type="submit">Log out</button>
+                </form>
+            </div>
+        {% endif %}
+    </header>
+    <div class="app-shell{% if not user.is_authenticated %} app-shell-public{% endif %}">
+        {% if user.is_authenticated %}
+            <aside class="sidebar">
+                <div class="sidebar-heading">
+                    <span>Organizations</span>
+                    {% if user.is_staff %}
+                        <a href="{% url 'organizations:create' %}" aria-label="Create organization">+</a>
+                    {% endif %}
+                </div>
+                <nav>
+                    {% for nav_organization in navigation_organizations %}
+                        <a href="{% url 'organizations:detail' nav_organization.slug %}">
+                            {{ nav_organization.name }}
+                        </a>
+                    {% empty %}
+                        <p class="muted small">No organizations yet.</p>
+                    {% endfor %}
+                </nav>
+                {% if organization %}
+                    <div class="sidebar-section">
+                        <span class="sidebar-label">{{ organization.name }}</span>
+                        <a href="{% url 'projects:list' organization.slug %}">Projects</a>
+                        <a href="{% url 'tasks:list' organization.slug %}">Tasks</a>
+                    </div>
+                {% endif %}
+            </aside>
+        {% endif %}
+        <main class="content">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message message-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

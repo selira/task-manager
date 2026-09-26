@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ task.title }} · Task Manager{% endblock %}
+{% block content %}
+<div class="breadcrumbs">
+    <a href="{% url 'organizations:detail' organization.slug %}">{{ organization.name }}</a>
+    <span>/</span>
+    <a href="{% url 'projects:detail' organization.slug project.slug %}">{{ project.name }}</a>
+</div>
+<div class="page-header">
+    <div>
+        <p class="eyebrow">Task #{{ task.pk }}</p>
+        <h1>{{ task.title }}</h1>
+        <div class="badge-row">
+            <span class="badge badge-{{ task.status|lower }}">{{ task.get_status_display }}</span>
+            <span class="badge priority-{{ task.priority|lower }}">{{ task.get_priority_display }}</span>
+        </div>
+    </div>
+    {% if membership.role == "OWNER" or membership.role == "ADMIN" %}
+        <a class="button button-primary" href="{% url 'tasks:update' organization.slug project.slug task.pk %}">Edit task</a>
+    {% elif task.assignee_id == user.id %}
+        <a class="button button-primary" href="{% url 'tasks:update' organization.slug project.slug task.pk %}">Update status</a>
+    {% endif %}
+</div>
+<div class="detail-grid">
+    <section class="panel">
+        <p class="eyebrow">Description</p>
+        <div class="prose">{{ task.description|default:"No description provided."|linebreaks }}</div>
+    </section>
+    <aside class="panel metadata">
+        <div>
+            <span>Assignee</span>
+            <strong>{{ task.assignee|default:"Unassigned" }}</strong>
+        </div>
+        <div>
+            <span>Due date</span>
+            <strong>{{ task.due_date|date:"M j, Y"|default:"No due date" }}</strong>
+        </div>
+        <div>
+            <span>Created by</span>
+            <strong>{{ task.created_by }}</strong>
+        </div>
+        <div>
+            <span>Last updated</span>
+            <strong>{{ task.updated_at|date:"M j, Y, P" }}</strong>
+        </div>
+        {% if task.completed_at %}
+            <div>
+                <span>Completed</span>
+                <strong>{{ task.completed_at|date:"M j, Y, P" }}</strong>
+            </div>
+        {% endif %}
+    </aside>
+</div>
+{% endblock %}

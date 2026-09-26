@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Log in · Task Manager{% endblock %}
+{% block content %}
+<div class="auth-card">
+    <p class="eyebrow">Welcome back</p>
+    <h1>Log in to Task Manager</h1>
+    <p class="muted">Use your organization account to continue.</p>
+    <form method="post" class="form-stack">
+        {% csrf_token %}
+        {% include "includes/form_fields.html" %}
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        <button class="button button-primary button-block" type="submit">Log in</button>
+    </form>
+</div>
+{% endblock %}

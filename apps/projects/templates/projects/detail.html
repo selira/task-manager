@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ project.name }} · Task Manager{% endblock %}
+{% block content %}
+<div class="breadcrumbs">
+    <a href="{% url 'organizations:detail' organization.slug %}">{{ organization.name }}</a>
+    <span>/</span>
+    <a href="{% url 'projects:list' organization.slug %}">Projects</a>
+</div>
+<div class="page-header">
+    <div>
+        <div class="title-with-badge">
+            <h1>{{ project.name }}</h1>
+            <span class="badge badge-{{ project.status|lower }}">{{ project.get_status_display }}</span>
+        </div>
+        <p>{{ project.description|default:"No project description."|linebreaksbr }}</p>
+    </div>
+    {% if membership.role == "OWNER" or membership.role == "ADMIN" %}
+        <div class="header-actions">
+            <a class="button button-secondary" href="{% url 'projects:update' organization.slug project.slug %}">Edit project</a>
+            <a class="button button-primary" href="{% url 'tasks:create' organization.slug project.slug %}">Add task</a>
+        </div>
+    {% endif %}
+</div>
+<section class="panel">
+    <div class="section-header">
+        <div>
+            <p class="eyebrow">Work</p>
+            <h2>Tasks</h2>
+        </div>
+        <a href="{% url 'tasks:list' organization.slug %}?project={{ project.pk }}">Filter all tasks</a>
+    </div>
+    {% include "tasks/_task_list.html" %}
+</section>
+{% endblock %}

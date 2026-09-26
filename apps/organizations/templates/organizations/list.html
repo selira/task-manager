@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Task Manager{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="eyebrow">Dashboard</p>
+        <h1>Your organizations</h1>
+        <p>Choose an organization to view its projects and work.</p>
+    </div>
+    {% if user.is_staff %}
+        <a class="button button-primary" href="{% url 'organizations:create' %}">New organization</a>
+    {% endif %}
+</div>
+<div class="card-grid">
+    {% for item in organizations %}
+        <a class="card card-link" href="{% url 'organizations:detail' item.slug %}">
+            <div class="card-icon">{{ item.name|first|upper }}</div>
+            <h2>{{ item.name }}</h2>
+            <p>{{ item.project_count }} project{{ item.project_count|pluralize }}</p>
+            <span class="link-label">Open organization →</span>
+        </a>
+    {% empty %}
+        <div class="empty-state panel">
+            <h2>No organizations</h2>
+            <p>You have not been added to an organization yet.</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

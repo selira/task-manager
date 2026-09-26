@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Page not found · Task Manager{% endblock %}
+{% block content %}
+<div class="empty-state">
+    <p class="eyebrow">404</p>
+    <h1>Page not found</h1>
+    <p>The page may not exist, or you may not have access to it.</p>
+    <a class="button button-primary" href="{% url 'organizations:list' %}">Return to dashboard</a>
+</div>
+{% endblock %}

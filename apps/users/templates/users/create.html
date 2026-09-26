@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Add user · {{ organization.name }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="eyebrow">{{ organization.name }}</p>
+        <h1>Add a user</h1>
+        <p>Create a new account and assign its organization role.</p>
+    </div>
+</div>
+<div class="panel form-panel">
+    <form method="post" class="form-stack">
+        {% csrf_token %}
+        {% include "includes/form_fields.html" %}
+        <div class="form-actions">
+            <button class="button button-primary" type="submit">Create user</button>
+            <a class="button button-secondary" href="{% url 'organizations:detail' organization.slug %}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
