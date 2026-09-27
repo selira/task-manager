@@ -28,7 +28,7 @@ def organization_list(request):
 def organization_detail(request, slug):
     organization = get_organization_for_user(request.user, slug)
     memberships = organization.memberships.select_related("user")
-    projects = organization.projects.select_related("created_by").order_by("-updated_at")[:8]
+    projects = organization.projects.select_related("created_by").order_by("-updated_at")
     return render(
         request,
         "organizations/detail.html",

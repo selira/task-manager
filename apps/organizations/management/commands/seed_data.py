@@ -1,5 +1,6 @@
 from datetime import date
 
+from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
 from apps.organizations.models import Membership, Organization
@@ -12,6 +13,8 @@ class Command(BaseCommand):
     help = "Create a deterministic development dataset."
 
     def handle(self, *args, **options):
+        call_command("flush", interactive=False, verbosity=0)
+
         users = {}
         user_data = [
             ("alex@example.com", "Alex Morgan", True),

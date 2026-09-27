@@ -35,7 +35,15 @@ Open `http://127.0.0.1:8000/`. The seed command creates a staff owner account wi
 - Email: `alex@example.com`
 - Password: `demo-pass-123`
 
-The command also prints these credentials and is safe to run repeatedly.
+To populate a larger dataset with 20 users, organizations, projects, and tasks for UI testing,
+run:
+
+```bash
+python manage.py seed_data2
+```
+
+The large dataset login is `user01@example.com` with password
+`load-test-pass-123`.
 
 ## Roles
 
